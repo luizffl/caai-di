@@ -45,23 +45,21 @@ function splitParams(paramsString: string): string[] {
     if (inString) {
       current += char;
       if (char === inString && paramsString[i - 1] !== "\\") inString = null;
-      continue;
-    }
-
-    if (char === "'" || char === '"' || char === "`") {
+    } else if (char === "'" || char === '"' || char === "`") {
       inString = char;
       current += char;
-      continue;
-    }
-
-    if ("{[(".includes(char)) depth++;
-    if ("}])".includes(char)) depth--;
-    if (char === "," && depth === 0) {
+    } else if ("{[(".includes(char)) {
+      depth++;
+      current += char;
+    } else if ("}])".includes(char)) {
+      depth--;
+      current += char;
+    } else if (char === "," && depth === 0) {
       params.push(current);
       current = "";
-      continue;
+    } else {
+      current += char;
     }
-    current += char;
   }
   if (current.trim()) params.push(current);
   return params;
