@@ -29,11 +29,7 @@ export abstract class StaticDependencyModule<T> extends DependencyModule<T> {
   }
 }
 
-export class ValueDependencyModule<T> extends StaticDependencyModule<T> {
-  constructor(value: T) {
-    super(value);
-  }
-}
+export class ValueDependencyModule<T> extends StaticDependencyModule<T> {}
 
 export abstract class DynamicDependencyModule<T> extends DependencyModule<T> {
   readonly lifeCycle: ModuleLifeCycle;
