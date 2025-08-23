@@ -12,9 +12,10 @@ export type ModuleDescription = {
 };
 
 export class ModuleContainer {
-  private modules: Map<string, DependencyModule<any>> = new Map();
-  private rootModules: Map<string, DependencyModule<any>> = new Map();
-  private scopes: Map<string, Map<string, DependencyModule<any>>> = new Map();
+  private readonly modules: Map<string, DependencyModule<any>> = new Map();
+  private readonly rootModules: Map<string, DependencyModule<any>> = new Map();
+  private readonly scopes: Map<string, Map<string, DependencyModule<any>>> =
+    new Map();
 
   async resolveModule<T>(name: string, scopeName?: string): Promise<T> {
     if (scopeName && !this.scopes.has(scopeName)) {
