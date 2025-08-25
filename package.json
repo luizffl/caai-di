@@ -46,7 +46,6 @@
   "bugs": {
     "url": "https://github.com/luizffl/caai-di/issues"
   },
-  "description": "",
   "devDependencies": {
     "@vitest/expect": "^3.2.4",
     "tsdown": "^0.14.1",
