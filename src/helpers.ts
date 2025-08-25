@@ -5,25 +5,35 @@ export function getParametersNames(fn: Function): string[] {
 
   // Handle class constructors
   if (/^class\s/.test(fnString)) {
-    const constructorMatch = fnString.match(/constructor\s*\(([^)]*)\)/s);
-    if (!constructorMatch || !constructorMatch[1]) return [];
+    const constructorRegex = /constructor\s*\(([^)]*)\)/s;
+    const constructorMatch = constructorRegex.exec(fnString);
+    if (!constructorMatch?.[1]) return [];
     fnString = `(${constructorMatch[1]}) => {}`;
   }
 
   // Try to extract parameter list from function or arrow function
-  let match = fnString.match(/^[^(]*\(\s*([^)]*)\)/s);
-  if (!match) {
-    // Try to match single param arrow function: x => x*2
-    match = fnString.match(/^([a-zA-Z0-9_$]+)\s*=>/);
-    if (match) {
-      return [match[1].trim()];
-    }
-    return [];
-  }
+  let paramsString = extractParamsString(fnString);
+  if (paramsString === null) return [];
 
-  const paramsString = match[1];
+  const params = splitParams(paramsString);
 
-  // Split parameters by commas, but ignore commas inside {}, [], or ()
+  return params.map(cleanParam).filter(Boolean);
+}
+
+function extractParamsString(fnString: string): string | null {
+  let paramRegex = /^[^(]*\(\s*([^)]*)\)/s;
+  let match = paramRegex.exec(fnString);
+  if (match) return match[1];
+
+  // Try to match single param arrow function: x => x*2
+  let arrowParamRegex = /^([a-zA-Z0-9_$]+)\s*=>/;
+  match = arrowParamRegex.exec(fnString);
+  if (match) return match[1];
+
+  return null;
+}
+
+function splitParams(paramsString: string): string[] {
   const params: string[] = [];
   let depth = 0;
   let current = "";
@@ -34,48 +44,31 @@ export function getParametersNames(fn: Function): string[] {
 
     if (inString) {
       current += char;
-      if (char === inString && paramsString[i - 1] !== "\\") {
-        inString = null;
-      }
-      continue;
-    }
-
-    if (char === "'" || char === '"' || char === "`") {
+      if (char === inString && paramsString[i - 1] !== "\\") inString = null;
+    } else if (char === "'" || char === '"' || char === "`") {
       inString = char;
       current += char;
-      continue;
-    }
-
-    if (char === "{" || char === "[" || char === "(") {
+    } else if ("{[(".includes(char)) {
       depth++;
       current += char;
-      continue;
-    }
-    if (char === "}" || char === "]" || char === ")") {
+    } else if ("}])".includes(char)) {
       depth--;
       current += char;
-      continue;
-    }
-    if (char === "," && depth === 0) {
+    } else if (char === "," && depth === 0) {
       params.push(current);
       current = "";
-      continue;
+    } else {
+      current += char;
     }
-    current += char;
   }
   if (current.trim()) params.push(current);
+  return params;
+}
 
-  // Clean up each parameter
-  return params
-    .map((param) =>
-      param
-        // Remove inline comments
-        .replace(/\/\*.*?\*\//g, "")
-        // Remove TypeScript type annotations
-        .replace(/:[^=,]+(?=[=,}]|$)/g, "")
-        // Remove default values (but keep destructured objects/arrays)
-        .replace(/=[^,]+(?=(,|$))/g, "")
-        .trim()
-    )
-    .filter(Boolean);
+function cleanParam(param: string): string {
+  return param
+    .replace(/\/\*.*?\*\//g, "") // Remove inline comments
+    .replace(/:[^=,]+(?=[=,}]|$)/g, "") // Remove TypeScript type annotations
+    .replace(/=[^,]+(?=(,|$))/g, "") // Remove default values
+    .trim();
 }

@@ -126,7 +126,6 @@ describe("ModuleContainer", () => {
 
     const modules = container.listModules();
 
-    console.log("MY MODULES => \n\n", modules, "\n");
     expect(modules).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
