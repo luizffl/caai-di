@@ -1,5 +1,6 @@
 {
   "name": "gena-di",
+  "description": "`gena-di` is a minimalist TypeScript dependency injection library for Node.js that automatically resolves and injects dependencies into constructors and functions. Designed with zero external dependencies, it powers the Gena framework.",
   "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,9 +18,34 @@
     "test": "vitest",
     "test:watch": "vitest --watch"
   },
-  "keywords": [],
+  "keywords": [
+    "dependency injection",
+    "di",
+    "ioc",
+    "inversion of control",
+    "typescript",
+    "nodejs",
+    "minimalist",
+    "lightweight",
+    "auto inject",
+    "constructor injection",
+    "function injection",
+    "gena",
+    "gena-di",
+    "clean architecture",
+    "zero dependencies",
+    "service locator",
+    "ts di"
+  ],
   "author": "Luiz Leite (luizffl)",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luizffl/gena-di.git"
+  },
+  "bugs": {
+    "url": "https://github.com/luizffl/gena-di/issues"
+  },
   "description": "",
   "devDependencies": {
     "@vitest/expect": "^3.2.4",
