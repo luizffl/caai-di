@@ -148,14 +148,14 @@ describe("ModuleContainer", () => {
     );
   });
 
-  it("removes modules from scopes when removed", () => {
+  it("removes modules from scopes when removed", async () => {
     container.registerModule(
       new FunctionDependencyModule(() => "scoped", ModuleLifeCycle.SCOPED),
       "scopedMod"
     );
     container.createScope("scope1");
     container.removeModule("scopedMod");
-    expect(() =>
+    await expect(() =>
       container.resolveModule("scopedMod", "scope1")
     ).rejects.toThrowError();
   });
