@@ -1,7 +1,7 @@
 {
   "name": "@caai/di",
   "description": "`@caai/di` is a minimalist TypeScript dependency injection library for Node.js that automatically resolves and injects dependencies into constructors and functions. Designed with zero external dependencies, it powers the Caai framework.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
