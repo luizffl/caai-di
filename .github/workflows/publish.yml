@@ -50,7 +50,11 @@ jobs:
       - name: Get commits since last tag
         id: get_commits
         run: |
-          COMMITS=$(git log ${{ steps.get_tag.outputs.latest_tag }}..HEAD --pretty=format:"%s")
+          if [ "${{ steps.get_tag.outputs.latest_tag }}" = "0.0.0" ]; then
+            COMMITS=$(git log HEAD --pretty=format:"%s")
+          else
+            COMMITS=$(git log ${{ steps.get_tag.outputs.latest_tag }}..HEAD --pretty=format:"%s")
+          fi
           echo "commits<<EOF" >> $GITHUB_OUTPUT
           echo "$COMMITS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
